@@ -1,3 +1,5 @@
+//* Повторение по свойству "prototype"
+
 function Person(firstName, lastName, born) {
     this.firstName = firstName;
     this.lastName = lastName;

@@ -43,7 +43,7 @@ function getFullName () {
 
 function callBy (array, method) {
 	array.map((user) => {
-    user.fullName = method.bind(user);
+    user.fullName = method;
     console.log(user.fullName());
     console.log(user.fullName === this.getFullName);
     console.log(this.getFullName);

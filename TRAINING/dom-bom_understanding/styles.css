@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: rgb(242, 247, 202);
+    text-align: center;
+}
+
+.big-text-block {
+    background: orange;
+    font-size: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    padding: 15px;
+
+    width: max-content;
+
+    margin: 0 auto;
+}
+
+.before-first-block {
+    background: blueviolet;
+
+    width: max-content;
+
+    padding: 15px;
+    margin: 0 auto;
+
+    color: aliceblue;
+}
+
+.inner-big-text {
+    background: rgb(250, 248, 123);
+
+    width: max-content;
+
+    text-transform: none;
+
+    padding: 5px;
+    margin: 0 auto;
+
+    color: rgb(6, 106, 194);
+}
+
+.list-wrapper {
+    width: max-content;
+    min-width: 50px;
+    min-height: 50px;
+
+    padding: 25px;
+    margin: 0 auto;
+
+    background: rgb(110, 255, 91);
+}
+
+.list {
+    background: skyblue;
+
+    width: max-content;
+}
+
+.image {
+    padding: 5px;
+    background: red;
+    margin-top: 20px;
+}
+
+.text-block {
+    width: max-content;
+
+    padding: 25px;
+    margin: 0 auto;
+
+    background: rgb(197, 101, 252);
+
+    text-align: center;
+}
+
+.active-text {
+    padding: 5px;
+    background: rgb(255, 0, 119);
+}
+
+.autos {
+    background: rgb(174, 204, 38);
+
+    padding: 15px;
+
+    width: max-content;
+
+    margin: 0 auto;
+
+}
+
+.auto-card {
+    background: rgb(0, 217, 255);
+
+    padding: 15px;
+
+    min-width: max-content;
+
+    margin: 15px auto;
+
+    border: 4px solid red;
+}
+
+.btn {
+    margin-top: 15px;
+    padding: 9px;
+
+    font-weight: 700;
+
+    background: purple;
+}
+
+.btn:hover {
+    background: red;
+}
+
+.btn:active {
+    background: #c4c4c4;
+}

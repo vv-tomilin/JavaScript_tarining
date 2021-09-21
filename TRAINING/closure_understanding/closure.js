@@ -28,8 +28,8 @@ const btnCounter2Selector = document.querySelector('#btn-counter2');
 const counter1 = counter(counter1Selector, btnCounter1Selector);
 const counter2 = counter(counter2Selector, btnCounter2Selector);
 
-counter1();
-counter2();
+counter1;
+counter2;
 
 
 

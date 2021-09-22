@@ -108,6 +108,7 @@ body {
 }
 
 .btn {
+    display: block;
     margin-top: 15px;
     padding: 9px;
 
@@ -121,5 +122,29 @@ body {
 }
 
 .btn:active {
-    background: #c4c4c4;
+    background: #ffef0e;
+}
+
+.post-message {
+    width: max-content;
+
+    margin: 0 auto;
+
+    background: red;
+    padding: 25px;
+}
+
+.btn-post-message {
+    background: green;
+    color: white;
+}
+
+.btn-open:hover {
+    background: aqua;
+    color: blue;
+}
+
+.btn-open:active {
+    background: #ffef0e;
+    color: blue;
 }

@@ -1,3 +1,4 @@
+'use strict'
 
 const btnOpenNewTab = document.querySelector('#open-new-tab');
 const btnOpenNewWindow =document.querySelector('#open-new-window');

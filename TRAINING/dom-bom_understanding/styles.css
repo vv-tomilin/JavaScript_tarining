@@ -148,3 +148,39 @@ body {
     background: #ffef0e;
     color: blue;
 }
+
+.btns {
+    padding: 50px;
+    margin: 0 auto;
+
+    width: max-content;
+
+    background: orange;
+}
+
+.blocks-list {
+    padding: 25px;
+    margin: 0 auto;
+
+    width: max-content;
+
+    background: floralwhite;
+}
+
+.block-item {
+    padding: 15px;
+    margin: 10px auto;
+
+    width: max-content;
+
+    background: rgb(29, 250, 48);
+
+    border: 2px dashed red;
+
+    cursor: pointer;
+
+}
+
+.block-item--active {
+    background: red;
+}

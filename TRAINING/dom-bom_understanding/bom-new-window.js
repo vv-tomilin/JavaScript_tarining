@@ -1,3 +1,5 @@
+'use strict'
+
 const targetOrigin = 'file:///C:/Users/dnsuser/Desktop/JS%20Learning/JavaScript/Mini_tasks/TRAINING/dom-bom_understanding/bom-new-window.html';
 
 // window.addEventListener('message', function(e) {

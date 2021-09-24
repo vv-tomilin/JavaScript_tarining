@@ -1,6 +1,6 @@
 const PENDING_TIME = 500;
 
-let promise = plusFive(10, 50);
+let promise = plusFive(10, 5);
 
 promise.then((res) => {
     return res;
@@ -10,7 +10,8 @@ promise.then((res) => {
 }).then((data) => {
     console.log(`Результатом вычислений является число: ${data}`);
 })
-.catch((err) => {console.log(err);});
+.catch((err) => {console.log(err);})
+.finally(() => {console.log('Finally!!!');});
 
 function plusFive(num, count) {
     return new Promise((resolve, reject) => {

@@ -1,28 +1,31 @@
 const PENDING_TIME = 500;
 
-let promise = plusFive(10, 5);
+let promise = plusFive(10, 50);
 
 promise.then((res) => {
-    console.log(res);
     return res;
 })
 .then((data) => {
-    return (divideByTwo(data, 10));
+    return (divideByTwo(data, 81));
 }).then((data) => {
     console.log(`Результатом вычислений является число: ${data}`);
-});
+})
+.catch((err) => {console.log(err);});
 
 function plusFive(num, count) {
     return new Promise((resolve, reject) => {
 
+        console.log('Начинаю выполнение операций');
+
         if(count > 100) {
-            reject(new Error('Будет слишком долго! Не хочу ждать...'));
+            reject(new Error(`Будет слишком долго! Не хочу ждать ${(count * PENDING_TIME)/1000} секунд`));
+            return;
         }
 
-        console.log('Начинаю выполнение операций');
         const res = num + 5;
 
         setTimeout(() => {
+
             console.log(`Прибавляю 5 к ${num}.`);
 
             setTimeout(() => {
@@ -39,10 +42,10 @@ function divideByTwo(num, count) {
     return new Promise((resolve, reject) => {
 
         if(count > 80) {
-            reject(new Error('Будет слишком долго! Не хочу ждать...'));
+            reject(new Error(`Будет слишком долго! Не хочу ждать ${(count * PENDING_TIME)/1000} секунд`));
+            return;
         }
 
-        console.log('Начинаю выполнение операций');
         const res = num / 2;
 
         setTimeout(() => {
@@ -54,6 +57,6 @@ function divideByTwo(num, count) {
                     resolve(res);
                 }, PENDING_TIME)
             }, count * PENDING_TIME);
-        }, 800);
+        }, 1000);
     });
 }

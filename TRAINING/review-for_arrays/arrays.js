@@ -143,3 +143,49 @@ console.log(alex.lastIndexOf('exey'));
 console.log('\n');
 
 //* ===================================================== //
+
+const arrFind = [561, 65465, 84, 565, 7899, 3215, 52248, 15845, 154];
+
+const resFind = arrFind.find((num, index, arr) => {
+    if (num === 84) {
+        console.log(index);
+        console.log(arr[index]);
+        return true;
+    } else return false;
+});
+
+console.log(resFind ? 'yes' : 'no');
+console.log(resFind);
+
+console.log('\n');
+
+//* ===================================================== //
+
+const arrFilter = [57, 26, 6874, 488, 12, 5354, 4, 34, 58, 687, 9, 68, 45, 94, 8, 89];
+
+const resFilter = arrFilter.filter((num) => {
+    if(num >= 10 && num <= 589) {
+        return true;
+    } else return false;
+});
+
+console.log(resFilter);
+
+console.log('\n');
+
+//* ===================================================== //
+
+const arrFindIndex = [57, 26, 6874, 488, 12, 5354, 4, 34, 58, 687, 9, 68, 45, 94, 8, 89];
+
+const resFindIndex = arrFindIndex.findIndex((elem, index, arr) => {
+    const res = elem % 4;
+    
+    if (res === 0) {
+        console.log(arr[index]);
+        return true;
+    } else false
+});
+
+console.log(resFindIndex);
+
+//* ===================================================== //

@@ -28,20 +28,27 @@ readline.on('line', (line) => {
     }
 
     function calculateMaxBonus(managers, amounts) {
-        const maxCalc = Math.floor(amounts.reduce((total, item) => {
+        let max = Math.floor(amounts.reduce((total, item) => {
             return Math.floor(Number.parseInt(total) + Number.parseInt(item));
         }) / managers );
+        let min = 0;
+        let current = 0;
 
-        for (let i = maxCalc; i > 0; i--) {
-            const calc = amounts.reduce((sum, amount) => sum + Math.floor(amount / i), 0);
-            if (calc >= managers) {
-                return i;
+        while(max != min) {
+            current = Math.ceil((max + min) / 2);
+
+            if (amounts.reduce((all, amount) => all + Math.floor(amount/current), 0) >= managers) {
+                min = current;
+            } else {
+                max = current - 1;
             }
         }
-        return 0;
+        return current;
     }
 
-    console.log(calculateMaxBonus(managers, amounts));
+    const result = calculateMaxBonus(managers, amounts);
+
+    console.log(result);
     readline.close();
 
 }).on('close', () => process.exit(0));

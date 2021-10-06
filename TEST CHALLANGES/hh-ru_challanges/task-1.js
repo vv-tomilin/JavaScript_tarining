@@ -23,7 +23,7 @@ readline.on('line', (line) => {
         lineNum = lineNum + 1;
 
         if (lineNum > accounts + 1) {
-            console.log();
+            // comment
         } else return;
     }
 
@@ -48,7 +48,7 @@ readline.on('line', (line) => {
 
     const result = calculateMaxBonus(managers, amounts);
 
-    console.log(result);
+    console.log(String(result));
     readline.close();
 
 }).on('close', () => process.exit(0));

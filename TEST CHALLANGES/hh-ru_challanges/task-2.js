@@ -1,6 +1,6 @@
 const str1 = 'd5165+d2+(d2855+d2*3+30)+4548+d48';
 const str2 = 'd22*133';
-console.log(str1);
+console.log(str2);
 
 const numEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const operators = ['*', '+', '-', '>', '(', ')'];
@@ -8,7 +8,7 @@ const operators = ['*', '+', '-', '>', '(', ')'];
 let numStack = [];
 let operatorsStack = [];
 
-parserStr(str1);
+parserStr(str2);
 
 function parserStr(str) {
 
@@ -42,6 +42,8 @@ function parserStr(str) {
 
             numStack.push(numToken.join(''));
             numStackCounter +=1;
+
+            console.log(numStack, i); //! ==========
         }
 
         if (isNumber(strElements[i])) {
@@ -59,12 +61,18 @@ function parserStr(str) {
                 numStack.push(numToken.join(''));
                 numStackCounter +=1;
 
+                console.log(numStack, i); //! ==========
+
             } else if(numStack.length > 1){
 
                 numStack.push(strElements[i]);
                 numStackCounter +=1;
 
+                console.log(numStack, i); //! ==========
+
             } else {
+
+                console.log(numStack, i); //! ==========
                 
                 if (numStack.length !== 0) {
                     const bigNumToken = [...numStackTopCurrent.split('')];
@@ -76,9 +84,13 @@ function parserStr(str) {
 
                     numStack.push(bigNumToken.join(''));
                     numStackCounter +=1;
+
+                    console.log(numStack, i); //! ==========
                 } else {
                     numStack.push(strElements[i]);
                     numStackCounter +=1;
+
+                    console.log(numStack, i); //! ==========
                 }
             }
 
@@ -97,6 +109,8 @@ function parserStr(str) {
                     numStackCounter +=1;
                 }
             }
+
+            console.log(numStack, i); //! ==========
         }
 
         //* формирую токен из оператора и ложу его в стек с операторами
@@ -112,18 +126,20 @@ function parserStr(str) {
         if (i + 1 > strElements.length - 1) {
             
             if (strElements[i] !== ')') {
+                console.log(numStack, i); //! ==========
+
                 const searchDTopEl = numStack[numStackCounter - 1].includes('d');
                 const searchDPrevEl = numStack[numStackCounter - 2].includes('d');
 
-                // const topNum = numStack[numStackCounter - 1];
-                // const prevNum = numStack[numStackCounter - 2];
+                const topNum = numStack[numStackCounter - 1];
+                const prevNum = numStack[numStackCounter - 2];
 
                 //* Здесь считаем простое выражение без dN
                 if (!searchDTopEl && !searchDPrevEl) {
                     //* объект с настройками арифметических операций
                     const operationProps = {
-                        firstOperand: numStack[numStackCounter - 2],
-                        secondOperand: numStack[numStackCounter - 1],
+                        firstOperand: prevNum,
+                        secondOperand: topNum,
                         operator: operatorsStackTop
                     };
                     const result = mathOperation(operationProps);
@@ -133,17 +149,17 @@ function parserStr(str) {
 
                     //* если первый элемент в выражении с dN (пример: d6+3)
                     if (!searchDTopEl && searchDPrevEl) {
-                        console.log('dN + N', /*prevNum*/);
+                        console.log('dN + N', prevNum);
 
-                        // const arr = prevNum.split('');
-                        // const resArr = [];
-                        // for (let j = 0; j < arr.length; j++) {
-                        //     if (j !== 0) {
-                        //         resArr.push(arr[j]);
-                        //     }
-                        // }
+                        const arr = prevNum.split('');
+                        const resArr = [];
+                        for (let j = 0; j < arr.length; j++) {
+                            if (j !== 0) {
+                                resArr.push(arr[j]);
+                            }
+                        }
 
-                        // console.log(resArr);
+                        console.log(resArr);
 
                     }
                 }

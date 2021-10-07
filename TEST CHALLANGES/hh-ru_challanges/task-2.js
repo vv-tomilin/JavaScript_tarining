@@ -1,4 +1,4 @@
-const str1 = 'd46+d2+(d2855+d2*3+30)+4548+d48';
+const str1 = 'd5165+d2+(d2855+d2*3+30)+4548+d48';
 const str2 = 'd22*133';
 console.log(str1);
 
@@ -22,7 +22,7 @@ function parserStr(str) {
 
         const isNumberPrevChar = numEtalon.includes(strElements[i - 1]); //* является ли числом предыдущий символ
 
-        const numStackTopCurrent = numStack[numStackCounter - 1]; //* текущий верхний элемент стека в цикле (не может быть использован как токен)
+        const numStackTopCurrent = numStack[numStack.length - 1]; //* текущий верхний элемент стека в цикле (не может быть использован как токен)
 
         //* Формирую токен из числа или dN и ложу его в стек с числами
         if (strElements[i] === 'd') {
@@ -31,11 +31,25 @@ function parserStr(str) {
             numStackCounter +=1;
         }
 
-        if (isNumber(strElements[i])) {
+        if (strElements[i - 1] === 'd' && numStack.length === 1) {
             const numToken = [];
 
+            numToken.push(strElements[i - 1]);
+            numToken.push(strElements[i]);
+
+            numStack.pop(numStackTopCurrent);
+            numStackCounter -= 1;
+
+            numStack.push(numToken.join(''));
+            numStackCounter +=1;
+        }
+
+        if (isNumber(strElements[i])) {
+
             //* двузначный токен
-            if (isNumberPrevChar || strElements[i - 1] === 'd') {
+            if ((isNumberPrevChar || strElements[i - 1] === 'd') && numStack.length > 1) {
+                const numToken = [];
+
                 numToken.push(strElements[i - 1]);
                 numToken.push(strElements[i]);
 
@@ -44,9 +58,28 @@ function parserStr(str) {
 
                 numStack.push(numToken.join(''));
                 numStackCounter +=1;
-            } else {
+
+            } else if(numStack.length > 1){
+
                 numStack.push(strElements[i]);
                 numStackCounter +=1;
+
+            } else {
+                
+                if (numStack.length !== 0) {
+                    const bigNumToken = [...numStackTopCurrent.split('')];
+
+                    bigNumToken.push(strElements[i]);
+
+                    numStack.pop(numStackTopCurrent);
+                    numStackCounter -= 1;
+
+                    numStack.push(bigNumToken.join(''));
+                    numStackCounter +=1;
+                } else {
+                    numStack.push(strElements[i]);
+                    numStackCounter +=1;
+                }
             }
 
             //* токен с количеством символов > 2
@@ -64,14 +97,13 @@ function parserStr(str) {
                     numStackCounter +=1;
                 }
             }
-
-            console.log(numStackTopCurrent);
         }
 
         //* формирую токен из оператора и ложу его в стек с операторами
         if (isOperator(strElements[i])) {
+
+            //* если стек с операторами пустой то добавляем оператор в стек
             if (operatorsStack.length === 0) {
-                //* если стек с операторами пустой то добавляем оператор в стек
                 operatorsStack.push(strElements[i]);
             }
         }

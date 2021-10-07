@@ -1,6 +1,6 @@
-const str1 = '6+d2+(d2855+d2*3+30)+4548+d48';
-const str2 = '2*133';
-console.log(str2);
+const str1 = 'd46+d2+(d2855+d2*3+30)+4548+d48';
+const str2 = 'd22*133';
+console.log(str1);
 
 const numEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const operators = ['*', '+', '-', '>', '(', ')'];
@@ -8,7 +8,7 @@ const operators = ['*', '+', '-', '>', '(', ')'];
 let numStack = [];
 let operatorsStack = [];
 
-parserStr(str2);
+parserStr(str1);
 
 function parserStr(str) {
 
@@ -22,7 +22,7 @@ function parserStr(str) {
 
         const isNumberPrevChar = numEtalon.includes(strElements[i - 1]); //* является ли числом предыдущий символ
 
-        const numStackTopCurrent = numStack[numStack.length - 1]; //* текущий верхний элемент стека в цикле (не может быть использован как токен)
+        const numStackTopCurrent = numStack[numStackCounter - 1]; //* текущий верхний элемент стека в цикле (не может быть использован как токен)
 
         //* Формирую токен из числа или dN и ложу его в стек с числами
         if (strElements[i] === 'd') {
@@ -64,6 +64,8 @@ function parserStr(str) {
                     numStackCounter +=1;
                 }
             }
+
+            console.log(numStackTopCurrent);
         }
 
         //* формирую токен из оператора и ложу его в стек с операторами
@@ -81,6 +83,9 @@ function parserStr(str) {
                 const searchDTopEl = numStack[numStackCounter - 1].includes('d');
                 const searchDPrevEl = numStack[numStackCounter - 2].includes('d');
 
+                // const topNum = numStack[numStackCounter - 1];
+                // const prevNum = numStack[numStackCounter - 2];
+
                 //* Здесь считаем простое выражение без dN
                 if (!searchDTopEl && !searchDPrevEl) {
                     //* объект с настройками арифметических операций
@@ -92,8 +97,23 @@ function parserStr(str) {
                     const result = mathOperation(operationProps);
                     console.log(result);
                 } else {
-                    //* если есть dN хотя бы в одном из токенов
-                    console.log('tis is D');
+                    //* Начинаем работу здесь если есть dN хотя бы в одном из токенов
+
+                    //* если первый элемент в выражении с dN (пример: d6+3)
+                    if (!searchDTopEl && searchDPrevEl) {
+                        console.log('dN + N', /*prevNum*/);
+
+                        // const arr = prevNum.split('');
+                        // const resArr = [];
+                        // for (let j = 0; j < arr.length; j++) {
+                        //     if (j !== 0) {
+                        //         resArr.push(arr[j]);
+                        //     }
+                        // }
+
+                        // console.log(resArr);
+
+                    }
                 }
 
             } else {

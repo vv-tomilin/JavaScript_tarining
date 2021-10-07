@@ -5,13 +5,6 @@ console.log(str2);
 const numEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const operators = ['*', '+', '-', '>', '(', ')'];
 
-// const operatorsPriority = {
-//     greater: 1,        //? ">"
-//     addition: 2,       //? "+"
-//     subtraction: 2,    //? "-"
-//     multiplication: 3, //? "*"
-// };
-
 let numStack = [];
 let operatorsStack = [];
 
@@ -25,11 +18,13 @@ function parserStr(str) {
 
     for (let i = 0; i < strElements.length; i++) {
 
+        const operatorsStackTop = operatorsStack[operatorsStack.length - 1]; //* текущий верхний элемент стека операторов в цикле 
+
         const isNumberPrevChar = numEtalon.includes(strElements[i - 1]); //* является ли числом предыдущий символ
 
-        const numStackTopCurrent = numStack[numStack.length - 1]; //* верхний элемент стэка
+        const numStackTopCurrent = numStack[numStack.length - 1]; //* текущий верхний элемент стека в цикле (не может быть использован как токен)
 
-        //* Формирую токен из числа или dN и ложу его в стэк с числами
+        //* Формирую токен из числа или dN и ложу его в стек с числами
         if (strElements[i] === 'd') {
             numStack.push(strElements[i]);
 
@@ -71,13 +66,39 @@ function parserStr(str) {
             }
         }
 
-        //* формирую токен из оператора и ложу его в стэк с операторами
+        //* формирую токен из оператора и ложу его в стек с операторами
         if (isOperator(strElements[i])) {
-            operatorsStack.push(strElements[i]);
+            if (operatorsStack.length === 0) {
+                //* если стек с операторами пустой то добавляем оператор в стек
+                operatorsStack.push(strElements[i]);
+            }
         }
 
+        //* конец строки
         if (i + 1 > strElements.length - 1) {
-            console.log('End', numStackCounter, numStack[numStackCounter - 1]);
+            
+            if (strElements[i] !== ')') {
+                const searchDTopEl = numStack[numStackCounter - 1].includes('d');
+                const searchDPrevEl = numStack[numStackCounter - 2].includes('d');
+
+                //* Здесь считаем простое выражение без dN
+                if (!searchDTopEl && !searchDPrevEl) {
+                    //* объект с настройками арифметических операций
+                    const operationProps = {
+                        firstOperand: numStack[numStackCounter - 2],
+                        secondOperand: numStack[numStackCounter - 1],
+                        operator: operatorsStackTop
+                    };
+                    const result = mathOperation(operationProps);
+                    console.log(result);
+                } else {
+                    //* если есть dN хотя бы в одном из токенов
+                    console.log('tis is D');
+                }
+
+            } else {
+                console.log('this is - )', strElements[i]);
+            }
         }
     }
 
@@ -94,5 +115,27 @@ function isNumber(char) {
 
 function isOperator(char) {
     return operators.includes(char);
+}
+
+function mathOperation(props={}) {
+    const {firstOperand, secondOperand, operator} = props;
+
+    const first = Number.parseInt(firstOperand);
+    const second = Number.parseInt(secondOperand);
+    let result;
+
+    switch (operator) {
+        case '*':
+            result = first * second;
+            break;
+        case '+':
+            result = first + second;
+            break;
+        case '-':
+            result = first - second;
+            break;
+    }
+
+    return String(result);
 }
 

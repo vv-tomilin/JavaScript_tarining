@@ -1,5 +1,5 @@
 const str1 = 'd5165+d2+(d2855+d2*3+30)+4548+d48';
-const str2 = 'd22*133';
+const str2 = 'd22*1000';
 console.log(str2);
 
 const numEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -52,6 +52,8 @@ function parserStr(str) {
             if ((isNumberPrevChar || strElements[i - 1] === 'd') && numStack.length > 1) {
                 const numToken = [];
 
+                console.log('Search', numStack, i); //! ========== Search ERROR
+
                 numToken.push(strElements[i - 1]);
                 numToken.push(strElements[i]);
 
@@ -61,21 +63,23 @@ function parserStr(str) {
                 numStack.push(numToken.join(''));
                 numStackCounter +=1;
 
-                console.log(numStack, i); //! ==========
+                console.log('Search', numStack, i); //! ========== Search ERROR
 
             } else if(numStack.length > 1){
 
                 numStack.push(strElements[i]);
                 numStackCounter +=1;
 
-                console.log(numStack, i); //! ==========
+                console.log('CONCAT',numStack, i); //! ==========
 
             } else {
 
-                console.log(numStack, i); //! ==========
+                console.log(numStack, i); //! ========== This ERROR block !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 
-                if (numStack.length !== 0) {
+                if (numStack.length !== 0 && !operators.includes(strElements[i + 1])) {
                     const bigNumToken = [...numStackTopCurrent.split('')];
+
+                    console.log('Token', bigNumToken, i); //! =================
 
                     bigNumToken.push(strElements[i]);
 
@@ -85,12 +89,41 @@ function parserStr(str) {
                     numStack.push(bigNumToken.join(''));
                     numStackCounter +=1;
 
-                    console.log(numStack, i); //! ==========
-                } else {
+                    console.log('Token', bigNumToken, i); //! =================
+
+                    console.log(numStack, i); //! ========== This ERROR block !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                } else if (operators.includes(strElements[i + 1])) {
+                    //! THIS ERRRRRRRRRRRRRRRRRRRRRRRROR START
+
+                    console.log('Else in', numStack, i); //! ==========
+
+                    const token = [];
+
                     numStack.push(strElements[i]);
                     numStackCounter +=1;
 
-                    console.log(numStack, i); //! ==========
+                    console.log('Else push cur', numStack, i); //! ==========
+
+                    token.push(numStack[numStack.length - 2]);
+                    token.push(numStack[numStack.length - 1]);
+                    console.log('token', token, i); //! ===============
+
+                    console.log('numStack.length', numStack.length); //! ==========
+                    console.log('numStack.length - 2', numStack[numStack.length - 2]); //! ==========
+
+                    numStack.pop(numStack[numStack.length - 1]);
+                    numStack.pop(numStack[numStack.length - 2]);
+                    numStackCounter -= 2;
+
+                    console.log('Else pop', numStack, i, numStack.length); //! ==========
+
+                    numStack.push(token.join(''));
+                    numStackCounter +=1;
+
+                    //! ОСТАЕТСЯ d2 если здесь удалить выходит ошибка в блоке конца строки
+
+                    console.log('Else out', numStack, i); //! ==========
                 }
             }
 

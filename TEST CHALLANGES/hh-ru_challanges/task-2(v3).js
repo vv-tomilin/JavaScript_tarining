@@ -5,11 +5,11 @@ const str2 = '(1*21+23)*45';
 const str3 = 'd2+d45+3+d789';
 const str4 = 'd665+68+d155';
 const str5 = 'd5646354654+651616464646+d48484+d5566';
-const str6 = '21+25-45+5+2';
+const str6 = '21+25+45+5+2';
 const str7 = '(5>4)*2';
 const str8 = '10+5*2-1*3*6'; // 
 
-const currentStr = str8;
+const currentStr = str6;
 
 const numsEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd'];
 const opersEtalon = ['*', '+', '-', '>', '(', ')'];
@@ -27,12 +27,6 @@ function calcVariations(tokensArr=[]) {
 
     for (let i = 0; i < tokensArr.length; i++) {
 
-        console.log('START i',
-            i , 'Num st=>', numStack, 'Oper st=>', operStack, 
-            'Top num', numStack[numStack.length - 1], 
-            'Top op', operStack[operStack.length - 1],
-            'Cur tok:', tokensArr[i]); //! START 000000000000000000000000000000000000000000
-        
         const currentToken = tokensArr[i];
 
         const isNumber = (str) => {
@@ -58,159 +52,149 @@ function calcVariations(tokensArr=[]) {
                 const topNum = numStack[numStack.length - 1];
                 const prevNum = numStack[numStack.length - 2];
                 
-                if (currentToken === '*') {
-                    switch (topOper) {
-                        //* равный приоритет
-                        case '*':
-                            if (!topNum.includes('d') && !prevNum.includes('d')) {
+                //* работа с простыми числами
+                if (!topNum.includes('d') && !prevNum.includes('d')) {
+                    if (currentToken === '*') {
+                        switch (topOper) {
+                            //* равный приоритет
+                            case '*':
                                 const calc = Number.parseInt(prevNum) * Number.parseInt(topNum);
-
+    
                                 numStack.pop(topNum);
                                 numStack.pop(prevNum);
                                 numCount -= 2;
-
+    
                                 numStack.push(String(calc));
                                 numCount += 1;
-
+    
                                 operStack.pop(topOper);
                                 operStack.push(currentToken);
-                            }
-                            break;
 
-                        //* приоритет выше
-                        case '+':
-                            operStack.push(currentToken);
-                            break;
-                        case '-':
-                            operStack.push(currentToken);
-                            break;
-                        case '(':
-                            operStack.push(currentToken);
-                            break;
-                        case ')':
-                            operStack.push(currentToken);
-                            break;
-                        case '>':
-                            operStack.push(currentToken);
-                            break;
+                                break;
+    
+                            //* приоритет выше
+                            case '+':
+                                operStack.push(currentToken);
+                                break;
+                            case '-':
+                                operStack.push(currentToken);
+                                break;
+                            case '(':
+                                operStack.push(currentToken);
+                                break;
+                            case ')':
+                                operStack.push(currentToken);
+                                break;
+                            case '>':
+                                operStack.push(currentToken);
+                                break;
+                        }
                     }
-                }
 
-                if (currentToken === '+') {
-                    switch (topOper) {
-                        case '*':
-                            if (!topNum.includes('d') && !prevNum.includes('d')) {
-                                const calc = Number.parseInt(prevNum) * Number.parseInt(topNum);
-
+                    if (currentToken === '+') {
+                        switch (topOper) {
+                            case '*':
+                                const calc1 = Number.parseInt(prevNum) * Number.parseInt(topNum);
+    
                                 numStack.pop(topNum);
                                 numStack.pop(prevNum);
                                 numCount -= 2;
-
-                                numStack.push(String(calc));
+    
+                                numStack.push(String(calc1));
                                 numCount += 1;
-
+    
                                 operStack.pop(topOper);
                                 operStack.push(currentToken);
-                            }
-                            break;
-                        case '+':
-                            if (!topNum.includes('d') && !prevNum.includes('d')) {
-                                const calc = Number.parseInt(prevNum) + Number.parseInt(topNum);
-
+                                break;
+                            case '+':
+                                const calc2 = Number.parseInt(prevNum) + Number.parseInt(topNum);
+    
                                 numStack.pop(topNum);
                                 numStack.pop(prevNum);
                                 numCount -= 2;
-
-                                numStack.push(String(calc));
+    
+                                numStack.push(String(calc2));
                                 numCount += 1;
-
+    
                                 operStack.pop(topOper);
                                 operStack.push(currentToken);
-                            }
-                            break;
-                        case '-':
-                            if (!topNum.includes('d') && !prevNum.includes('d')) {
-                                const calc = Number.parseInt(prevNum) - Number.parseInt(topNum);
-
+                                break;
+                            case '-':
+                                const calc3 = Number.parseInt(prevNum) - Number.parseInt(topNum);
+    
                                 numStack.pop(topNum);
                                 numStack.pop(prevNum);
                                 numCount -= 2;
-
-                                numStack.push(String(calc));
+    
+                                numStack.push(String(calc3));
                                 numCount += 1;
-
+    
                                 operStack.pop(topOper);
                                 operStack.push(currentToken);
-                            }
-                            break;
-                        case '(':
-                            operStack.push(currentToken);
-                            break;
-                        case ')':
-                            operStack.push(currentToken);
-                            break;
-                        case '>':
-                            operStack.push(currentToken);
-                            break;
+                                break;
+                            case '(':
+                                operStack.push(currentToken);
+                                break;
+                            case ')':
+                                operStack.push(currentToken);
+                                break;
+                            case '>':
+                                operStack.push(currentToken);
+                                break;
+                        }
                     }
-                }
 
-                if (currentToken === '-') {
-                    switch (topOper) {
-                        case '*':
-                            if (!topNum.includes('d') && !prevNum.includes('d')) {
-                                const calc = Number.parseInt(prevNum) * Number.parseInt(topNum);
-
+                    if (currentToken === '-') {
+                        switch (topOper) {
+                            case '*':
+                                const calc1 = Number.parseInt(prevNum) * Number.parseInt(topNum);
+    
                                 numStack.pop(topNum);
                                 numStack.pop(prevNum);
                                 numCount -= 2;
-
-                                numStack.push(String(calc));
+    
+                                numStack.push(String(calc1));
                                 numCount += 1;
-
+    
                                 operStack.pop(topOper);
                                 operStack.push(currentToken);
-                            }
-                            break;
-                        case '+':
-                            if (!topNum.includes('d') && !prevNum.includes('d')) {
-                                const calc = Number.parseInt(prevNum) + Number.parseInt(topNum);
-
+                                break;
+                            case '+':
+                                const calc2 = Number.parseInt(prevNum) + Number.parseInt(topNum);
+    
                                 numStack.pop(topNum);
                                 numStack.pop(prevNum);
                                 numCount -= 2;
-
-                                numStack.push(String(calc));
+    
+                                numStack.push(String(calc2));
                                 numCount += 1;
-
+    
                                 operStack.pop(topOper);
                                 operStack.push(currentToken);
-                            }
-                            break;
-                        case '-':
-                            if (!topNum.includes('d') && !prevNum.includes('d')) {
-                                const calc = Number.parseInt(prevNum) - Number.parseInt(topNum);
-
+                                break;
+                            case '-':
+                                const calc3 = Number.parseInt(prevNum) - Number.parseInt(topNum);
+    
                                 numStack.pop(topNum);
                                 numStack.pop(prevNum);
                                 numCount -= 2;
-
-                                numStack.push(String(calc));
+    
+                                numStack.push(String(calc3));
                                 numCount += 1;
-
+    
                                 operStack.pop(topOper);
                                 operStack.push(currentToken);
-                            }
-                            break;
-                        case '(':
-                            operStack.push(currentToken);
-                            break;
-                        case ')':
-                            operStack.push(currentToken);
-                            break;
-                        case '>':
-                            operStack.push(currentToken);
-                            break;
+                                break;
+                            case '(':
+                                operStack.push(currentToken);
+                                break;
+                            case ')':
+                                operStack.push(currentToken);
+                                break;
+                            case '>':
+                                operStack.push(currentToken);
+                                break;
+                        }
                     }
                 }
             } 
@@ -222,40 +206,36 @@ function calcVariations(tokensArr=[]) {
             const topNum = numStack[numStack.length - 1];
             const prevNum = numStack[numStack.length - 2];
 
-            switch (topOper) {
-                case '*':
-                    if (!topNum.includes('d') && !prevNum.includes('d')) {
+            if (!topNum.includes('d') && !prevNum.includes('d')) {
+                switch (topOper) {
+                    case '*':
                         result = Number.parseInt(prevNum) * Number.parseInt(topNum);
-
+    
                         numStack.pop(topNum);
                         numStack.pop(prevNum);
                         numCount -= 2;
-
+    
                         operStack.pop(topOper);
-                    }
-                    break;
-                case '+':
-                    if (!topNum.includes('d') && !prevNum.includes('d')) {
+                        break;
+                    case '+':
                         result = Number.parseInt(prevNum) + Number.parseInt(topNum);
-
+    
                         numStack.pop(topNum);
                         numStack.pop(prevNum);
                         numCount -= 2;
-
+    
                         operStack.pop(topOper);
-                    }
-                    break;
-                case '-':
-                    if (!topNum.includes('d') && !prevNum.includes('d')) {
+                        break;
+                    case '-':
                         result = Number.parseInt(prevNum) - Number.parseInt(topNum);
-
+    
                         numStack.pop(topNum);
                         numStack.pop(prevNum);
                         numCount -= 2;
-
+    
                         operStack.pop(topOper);
-                    }
-                    break;
+                        break;
+                }
             }
         }
 
@@ -267,61 +247,51 @@ function calcVariations(tokensArr=[]) {
                 const topNum = numStack[numStack.length - 1];
                 const prevNum = numStack[numStack.length - 2];
 
-                switch (topOper) {
-                    case '*':
-                        if (!topNum.includes('d') && !prevNum.includes('d')) {
-                            const calc = Number.parseInt(prevNum) * Number.parseInt(topNum);
-
+                if (!topNum.includes('d') && !prevNum.includes('d')) {
+                    switch (topOper) {
+                        case '*':
+                            const calc1 = Number.parseInt(prevNum) * Number.parseInt(topNum);
+    
                             numStack.pop(topNum);
                             numStack.pop(prevNum);
                             numCount -= 2;
-
-                            numStack.push(String(calc));
+    
+                            numStack.push(String(calc1));
                             numCount += 1;
-
+    
                             operStack.pop(topOper);
-                        }
-                        break;
-                    case '+':
-                        if (!topNum.includes('d') && !prevNum.includes('d')) {
-                            const calc = Number.parseInt(prevNum) + Number.parseInt(topNum);
-
+                            break;
+                        case '+':
+                            const calc2 = Number.parseInt(prevNum) + Number.parseInt(topNum);
+    
                             numStack.pop(topNum);
                             numStack.pop(prevNum);
                             numCount -= 2;
-
-                            numStack.push(String(calc));
+    
+                            numStack.push(String(calc2));
                             numCount += 1;
-
+    
                             operStack.pop(topOper);
-                        }
-                        break;
-                    case '-':
-                        if (!topNum.includes('d') && !prevNum.includes('d')) {
-                            const calc = Number.parseInt(prevNum) - Number.parseInt(topNum);
-
+                            break;
+                        case '-':
+                            const calc3 = Number.parseInt(prevNum) - Number.parseInt(topNum);
+    
                             numStack.pop(topNum);
                             numStack.pop(prevNum);
                             numCount -= 2;
-
-                            numStack.push(String(calc));
+    
+                            numStack.push(String(calc3));
                             numCount += 1;
-
+    
                             operStack.pop(topOper);
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
         }
-
-        console.log('END',
-            i , 'Num st=>', numStack, 'Oper st=>', operStack, 
-            'Top num', numStack[numStack.length - 1], 
-            'Top op', operStack[operStack.length - 1], 'Cur tok:', tokensArr[i] ); //! END 000000000000000000000000000000000000000000
     }
 
-    //TODO: попробовать тут (после выхода из цикла "for") работу со стеком операторов если их остается > 1
-
+    //* ниже производим вычисление последних чисел в стеке и выдаем результат
     switch(operStack[0]) {
         case '*':
             if (!numStack[1].includes('d') && !numStack[0].includes('d')) {

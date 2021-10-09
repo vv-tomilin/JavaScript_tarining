@@ -6,7 +6,7 @@ const str3 = 'd2+d45+3+d789';
 const str4 = 'd665+68+d155';
 const str5 = 'd5646354654+651616464646+d48484+d5566';
 const str6 = '21+25+45+5+2';
-const str7 = '(5>4)*(2>1)';
+const str7 = '(5>4)*(2>1)+3';
 const str8 = '10+5*2-1*3*6';
 
 const currentStr = str2;
@@ -69,15 +69,10 @@ function createRPN (calcArr) {
                         break;
 
                     case '+':
-                        //* если ниже приоритетом чем элемент в стеке
-                        if (stack[stack.length - 1] === '*') {
-                            exitArr.push(stack[stack.length - 1]); //* добавляю в выходной массив верхний элемент в стеке
-                            stack.pop(stack[stack.length - 1]); //* удаляю из стека верхний элемент в стеке
-                            stack.push(currentToken); //* добавляю текущий элемент в стек
-                        }
 
-                        //* если равный приоритет, то выталкиваем верхний оператор из стека
-                        if (stack[stack.length - 1] === '+' || stack[stack.length - 1] === '-') {
+                        //* если ниже приоритетом чем элемент в стеке
+                        if (stack[stack.length - 1] === '*' || stack[stack.length - 1] === '+' || stack[stack.length - 1] === '-') {
+
                             exitArr.push(stack[stack.length - 1]); //* добавляю в выходной массив верхний элемент в стеке
                             stack.pop(stack[stack.length - 1]); //* удаляю из стека верхний элемент в стеке
                             stack.push(currentToken); //* добавляю текущий элемент в стек
@@ -130,7 +125,7 @@ function createRPN (calcArr) {
 
                     case '>':
                         //* если ниже приоритетом чем элемент в стеке
-                        if (stack[stack.length - 1] === '*') {
+                        if (stack[stack.length - 1] === '*' || stack[stack.length - 1] === '+' || stack[stack.length - 1] === '-') {
                             exitArr.push(stack[stack.length - 1]); //* добавляю в выходной массив верхний элемент в стеке
                             stack.pop(stack[stack.length - 1]); //* удаляю из стека верхний элемент в стеке
                             stack.push(currentToken); //* добавляю текущий элемент в стек
@@ -163,10 +158,6 @@ function createRPN (calcArr) {
         }
     }
 
-    //TODO: на данный момент пока нет необходимости устранения ошибки
-    //! WARNING - ниже возможно появление ошибки, 
-    //! если есть выражение с 3 опреандами в скобках (пример: (1+3+9)*2)
-    //& Возможная причина - нет проверки стека на количество операторов
     exitArr.push(stack[0]);
     stack.pop(stack[0]);
 

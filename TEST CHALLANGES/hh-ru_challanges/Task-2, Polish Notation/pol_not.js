@@ -10,8 +10,9 @@ const str7 = '(1>4)*(4>3)+3';
 const str8 = '10+5*2-1*3*6';
 const str9 = '(1>3)+(3>2)*2+(1+2)';
 const str10 = 'd4-d4';
+const str11 = 'd2>(d3+1)';
 
-const currentStr = str10;
+const currentStr = str11;
 
 const numsEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd'];
 const opersEtalon = ['*', '+', '-', '>', '(', ')'];
@@ -95,7 +96,9 @@ function calculateVariations(rpnArr) {
             } else {
 
                 //* dN+N, dN*N.....
-                if (!stack[stack.length - 1].includes('d') && stack[stack.length - 2].includes('d')) {
+                if (!stack[stack.length - 1].includes('d') 
+                    && stack[stack.length - 2].includes('d') 
+                    && !Array.isArray(stack[stack.length - 1])) {
                     
                     const cutNum = Number.parseInt(stack[stack.length - 2].split('').slice(1).join('')); //* убираю d
                     const dN = [];
@@ -158,7 +161,7 @@ function calculateVariations(rpnArr) {
                             stack.push(calc4);
                             break;
                     }
-                }
+                } else
 
                 //* dN+dN, dN*dN.....
                 if (stack[stack.length - 1].includes('d') && stack[stack.length - 2].includes('d')) {
@@ -238,6 +241,92 @@ function calculateVariations(rpnArr) {
                                 for (let k = 0; k < dNTop.length; k++) {
 
                                     const res = Number.parseInt(dNPrev[j]) > Number.parseInt(dNTop[k]);
+                                    
+                                    if (res) {
+                                        calc4.push('1');
+                                    } else calc4.push('0');
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc4);
+                            break;
+                    }
+                } else
+
+                //* dN и [...]
+                if (stack[stack.length - 2].includes('d') && Array.isArray(stack[stack.length - 1])) {
+                    
+                    const cutNum = Number.parseInt(stack[stack.length - 2].split('').slice(1).join('')); //* убираю d
+
+                    const dN = []; //* [1, 2, .....] не строки
+
+                    for (let i = 0; i < cutNum; i++) {
+                        dN.push(i + 1);
+                    }
+
+                    switch (currentToken) {
+
+                        case '*':
+                            const calc1 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = String(dN[j] * Number.parseInt(stack[stack.length - 1][k]));
+                                    calc1.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc1);
+                            break;
+
+                        case '+':
+                            const calc2 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = String(dN[j] + Number.parseInt(stack[stack.length - 1][k]));
+                                    calc2.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc2);
+                            break;
+
+                        case '-':
+                            const calc3 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = String(dN[j] - Number.parseInt(stack[stack.length - 1][k]));
+                                    calc3.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc3);
+                            break;
+
+                        case '>':
+                            const calc4 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = dN[j] > Number.parseInt(stack[stack.length - 1][k]);
                                     
                                     if (res) {
                                         calc4.push('1');

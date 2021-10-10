@@ -8,9 +8,10 @@ const str5 = 'd5646354654+651616464646+d48484+d5566';
 const str6 = '21+25+45+5+2';
 const str7 = '(1>4)*(4>3)+3';
 const str8 = '10+5*2-1*3*6';
-const str9 = '(1>3)+(3>2)*2';//! WARNING почему то в стеке остается 2 числа вместо 1 и результат неверен (ошибка где то в синтаксическом анализаторе)
+const str9 = '(1>3)+(3>2)*2+(1+2)';
+const str10 = 'd4*d4';
 
-const currentStr = str9;
+const currentStr = str10;
 
 const numsEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd'];
 const opersEtalon = ['*', '+', '-', '>', '(', ')'];
@@ -91,6 +92,75 @@ function calculateVariations(rpnArr) {
                         stack.push(calc4);
                         break;
                 }
+            } else {
+
+                //* dN+N, dN*N.....
+                if (!stack[stack.length - 1].includes('d') && stack[stack.length - 2].includes('d')) {
+                    
+                    const cutNum = Number.parseInt(stack[stack.length - 2].split('').slice(1).join('')); //* убираю d
+                    const dN = [];
+
+                    for (let i = 0; i < cutNum; i++) {
+                        dN.push(i + 1);
+                    }
+
+                    switch (currentToken) {
+
+                        case '*':
+                            const calc1 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+                                calc1.push(String(Number.parseInt(dN[j]) * Number.parseInt(stack[stack.length - 1])));
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc1);
+                            break;
+
+                        case '+':
+                            const calc2 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+                                calc2.push(String(Number.parseInt(dN[j]) + Number.parseInt(stack[stack.length - 1])));
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc2);
+                            break;
+
+                        case '-':
+                            const calc3 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+                                calc3.push(String(Number.parseInt(dN[j]) - Number.parseInt(stack[stack.length - 1])));
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc3);
+                            break;
+
+                        case '>':
+                            const calc4 = [];
+
+                            for (let j = 0; j < dN.length; j++) {
+                                const res = Number.parseInt(dN[j]) > Number.parseInt(stack[stack.length - 1]);
+
+                                if (res) {
+                                    calc4.push('1');
+                                } else calc4.push('0');
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc4);
+                            break;
+                    }
+                }
+
+                
             }
         }
     }
@@ -104,7 +174,7 @@ function calculateVariations(rpnArr) {
 
 function createRPN (calcArr) {
 
-    //* Это - СИНТАКСИЧЕСКИЙ АНАЛИЗАТОР (выводит обратную польскую запись)
+    //* Это - СИНТАКСИЧЕСКИЙ компилятор
 
     let exitArr = [];
     let stack = [];
@@ -252,7 +322,7 @@ function createRPN (calcArr) {
 
 function tokensArrCreated(str) {
 
-    //* Это - ЛЕКСИЧЕСКИЙ АНАЛИЗАТОР (создает входной массив данных для Синтаксического анализатора)
+    //* Это - ЛЕКСИЧЕСКИЙ компилятор (создает входной массив данных для Синтаксического анализатора)
 
     const charsArr = str.split('');
 

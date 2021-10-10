@@ -160,7 +160,45 @@ function calculateVariations(rpnArr) {
                     }
                 }
 
-                
+                //* dN+dN, dN*dN.....
+                if (stack[stack.length - 1].includes('d') && stack[stack.length - 2].includes('d')) {
+
+                    const cutNumPrev = Number.parseInt(stack[stack.length - 2].split('').slice(1).join('')); //* убираю d
+                    const cutNumTop = Number.parseInt(stack[stack.length - 1].split('').slice(1).join('')); //* убираю d
+
+                    const dNPrev = [];
+                    const dNTop = [];
+
+                    for (let i = 0; i < cutNumPrev; i++) {
+                        dNPrev.push(i + 1);
+                    }
+
+                    for (let i = 0; i < cutNumTop; i++) {
+                        dNTop.push(i + 1);
+                    }
+
+                    switch (currentToken) {
+
+                        case '*':
+                            const calc1 = [];
+
+                            for (let j = 0; j < dNPrev.length; j++) {
+
+                                for (let k = 0; k < dNTop.length; k++) {
+
+                                    const res = String(Number.parseInt(dNPrev[j]) * Number.parseInt(dNTop[k]));
+                                    calc1.push(res);
+                                }
+                            }
+
+                            calc1.sort((a,b) => a-b);
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc1);
+                            break;
+                    }
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ const str6 = '21+25+45+5+2';
 const str7 = '(1>4)*(4>3)+3';
 const str8 = '10+5*2-1*3*6';
 const str9 = '(1>3)+(3>2)*2+(1+2)';
-const str10 = 'd4*d4';
+const str10 = 'd4-d4';
 
 const currentStr = str10;
 
@@ -191,11 +191,63 @@ function calculateVariations(rpnArr) {
                                 }
                             }
 
-                            calc1.sort((a,b) => a-b);
-
                             stack.pop(stack[stack.length - 1]);
                             stack.pop(stack[stack.length - 2]);
                             stack.push(calc1);
+                            break;
+                        
+                        case '+':
+                            const calc2 = [];
+
+                            for (let j = 0; j < dNPrev.length; j++) {
+
+                                for (let k = 0; k < dNTop.length; k++) {
+
+                                    const res = String(Number.parseInt(dNPrev[j]) + Number.parseInt(dNTop[k]));
+                                    calc2.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc2);
+                            break;
+
+                        case '-':
+                            const calc3 = [];
+
+                            for (let j = 0; j < dNPrev.length; j++) {
+
+                                for (let k = 0; k < dNTop.length; k++) {
+
+                                    const res = String(Number.parseInt(dNPrev[j]) - Number.parseInt(dNTop[k]));
+                                    calc3.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc3);
+                            break;
+
+                        case '>':
+                            const calc4 = [];
+
+                            for (let j = 0; j < dNPrev.length; j++) {
+
+                                for (let k = 0; k < dNTop.length; k++) {
+
+                                    const res = Number.parseInt(dNPrev[j]) > Number.parseInt(dNTop[k]);
+                                    
+                                    if (res) {
+                                        calc4.push('1');
+                                    } else calc4.push('0');
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc4);
                             break;
                     }
                 }
@@ -205,7 +257,7 @@ function calculateVariations(rpnArr) {
 
     resEasy = stack[stack.length - 1];
 
-    console.log('Результат', resEasy);//! 000000000000000000000000
+    console.log('Результат', resEasy.sort((a,b) => a-b));//! 000000000000000000000000
     console.log(stack); //! 000000000000000000000000
 }
 

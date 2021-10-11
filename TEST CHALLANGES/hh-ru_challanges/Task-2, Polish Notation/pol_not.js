@@ -1,6 +1,6 @@
 'use strict';
 
-const str1 = '2+1';
+const str1 = '2+2';
 const str2 = '(2+21*23)+45'; 
 const str3 = 'd2+d45+(3+d789)';
 const str4 = 'd665+68+d155';
@@ -10,26 +10,92 @@ const str7 = '(1>4)*(4>3)+3';
 const str8 = '10+5*2-1*3*6';
 const str9 = '(1>3)+(3>2)*2+(1+2)';
 const str10 = 'd4-d4';
-const str11 = 'd2>(d3+1)';
+const str11 = 'd2>(d3+1)'; //* dN && [...]
+const str12 = '(d2+3)>2'; //* [...] && dN
+const str13 = '5>(d2+d3)';
+const str14 = '(d2+d2)>(d2+3)';
 
-const currentStr = str11;
+const str1val = 'd4+d4';
+const str2val = 'd4+(d6>2)';
+
+const test1 = '(d4+2)*d3+(d6>2)+3';
+
+const currentStr = str2val;
+console.log(currentStr);
 
 const numsEtalon = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd'];
 const opersEtalon = ['*', '+', '-', '>', '(', ')'];
 
 const calcArr = tokensArrCreated(currentStr);
-console.log(currentStr);
-console.log(calcArr);
-console.log('Exit RPN:', createRPN (calcArr));
-
 const rpnArr = createRPN (calcArr);
+const calcVars = calculateVariations(rpnArr);
 
-calculateVariations(rpnArr);
+calculationOfProbabilities(calcVars);
+
+function calculationOfProbabilities(calcVars) {
+
+    let resultArr = [];
+
+    let current = null;
+
+    if (Array.isArray(calcVars)) {
+        for (let i = 0; i < calcVars.length; i++) {
+
+            const curElem = calcVars[i];
+            const res = [];
+    
+            if (resultArr.length !== 0 && current !== null) {
+                
+                if (curElem !== current) {
+                    const right = calcVars.lastIndexOf(curElem);
+                    const left = calcVars.indexOf(curElem);
+    
+                    let quantity = (right + 1) - (left + 1);
+    
+                    quantity += 1;
+    
+                    res.push(curElem);
+                    res.push(quantity);
+                    resultArr.push(res);
+    
+                    current = curElem;
+                }
+    
+            } else {
+    
+                const right = calcVars.lastIndexOf(curElem);
+                const left = calcVars.indexOf(curElem);
+    
+                let quantity = (right + 1) - (left + 1);
+    
+                quantity += 1;
+    
+                res.push(curElem);
+                res.push(quantity);
+                resultArr.push(res);
+    
+                current = curElem;
+            }
+        }
+    
+        for (let j = 0; j < resultArr.length; j++) {
+    
+            const numOne = resultArr[j][1];
+            const numTwo = calcVars.length;
+    
+            const percent = String((numOne * 100 / numTwo).toFixed(2));
+    
+            console.log(`${resultArr[j][0]} ${percent}`);
+        }
+    } else {
+        console.log(`${calcVars} 100.00`);
+    }
+}
 
 function calculateVariations(rpnArr) {
 
     let stack = [];
-    let resEasy = 0;
+    let result = 0;
 
     for (let i = 0; i < rpnArr.length; i++) {
 
@@ -48,7 +114,10 @@ function calculateVariations(rpnArr) {
 
         if (isOperator) {
 
-            if (!stack[stack.length - 1].includes('d') && !stack[stack.length - 2].includes('d')) {
+            if (!stack[stack.length - 1].includes('d') 
+                && !stack[stack.length - 2].includes('d') 
+                && !Array.isArray(stack[stack.length - 1])
+                && !Array.isArray(stack[stack.length - 2])) {
 
                 switch (currentToken) {
                     case '*':
@@ -339,17 +408,302 @@ function calculateVariations(rpnArr) {
                             stack.push(calc4);
                             break;
                     }
+                } else
+
+                //* [...] и dN
+                if (Array.isArray(stack[stack.length - 2]) && stack[stack.length - 1].includes('d')) {
+                    
+                    const cutNum = Number.parseInt(stack[stack.length - 1].split('').slice(1).join('')); //* убираю d
+
+                    const dN = []; //* [1, 2, .....] не строки
+
+                    for (let i = 0; i < cutNum; i++) {
+                        dN.push(i + 1);
+                    }
+
+                    switch (currentToken) {
+
+                        case '*':
+                            const calc1 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < dN.length; k++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2][j]) * dN[k]);
+                                    calc1.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc1);
+                            break;
+
+                        case '+':
+                            const calc2 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < dN.length; k++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2][j]) + dN[k]);
+                                    calc2.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc2);
+                            break;
+
+                        case '-':
+                            const calc3 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < dN.length; k++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2][j]) - dN[k]);
+                                    calc3.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc3);
+                            break;
+
+                        case '>':
+                            const calc4 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < dN.length; k++) {
+                                    const res = Number.parseInt(stack[stack.length - 2][j]) > dN[k];
+                                    
+                                    if (res) {
+                                        calc4.push('1');
+                                    } else calc4.push('0');
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc4);
+                            break;
+                    }
+                } else
+
+                //* [...] и N
+                if (Array.isArray(stack[stack.length - 2]) 
+                    && !stack[stack.length - 1].includes('d') 
+                    && !Array.isArray(stack[stack.length - 1])) {
+
+                        switch (currentToken) {
+                            case '*':
+                                const calc1 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 2].length; i++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2][i]) * Number.parseInt(stack[stack.length - 1]));
+                                    calc1.push(res);
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc1);
+                                break;
+
+                            case '+':
+                                const calc2 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 2].length; i++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2][i]) + Number.parseInt(stack[stack.length - 1]));
+                                    calc2.push(res);
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc2);
+                                break;
+
+                            case '-':
+                                const calc3 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 2].length; i++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2][i]) - Number.parseInt(stack[stack.length - 1]));
+                                    calc3.push(res);
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc3);
+                                break;
+
+                            case '>':
+                                const calc4 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 2].length; i++) {
+                                    const res = Number.parseInt(stack[stack.length - 2][i]) > Number.parseInt(stack[stack.length - 1]);
+                                    
+                                    if (res) {
+                                        calc4.push('1');
+                                    } else calc4.push('0');
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc4);
+                                break;
+                        }
+                } else
+
+                //* N и [...]
+                if (!stack[stack.length - 2].includes('d') 
+                    && !Array.isArray(stack[stack.length - 2]) 
+                    && Array.isArray(stack[stack.length - 1])) {
+                        switch (currentToken) {
+                            case '*':
+                                const calc1 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 1].length; i++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2]) * Number.parseInt(stack[stack.length - 1][i]));
+                                    calc1.push(res);
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc1);
+                                break;
+
+                            case '+':
+                                const calc2 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 1].length; i++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2]) + Number.parseInt(stack[stack.length - 1][i]));
+                                    calc2.push(res);
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc2);
+                                break;
+
+                            case '-':
+                                const calc3 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 1].length; i++) {
+                                    const res = String(Number.parseInt(stack[stack.length - 2]) - Number.parseInt(stack[stack.length - 1][i]));
+                                    calc3.push(res);
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc3);
+                                break;
+
+                            case '>':
+                                const calc4 = [];
+                                
+                                for (let i = 0; i < stack[stack.length - 1].length; i++) {
+                                    const res = Number.parseInt(stack[stack.length - 2]) > Number.parseInt(stack[stack.length - 1][i]);
+                                    
+                                    if (res) {
+                                        calc4.push('1');
+                                    } else calc4.push('0');
+                                }
+
+                                stack.pop(stack[stack.length - 1]);
+                                stack.pop(stack[stack.length - 2]);
+                                stack.push(calc4);
+                                break;
+                        }
+                } else
+
+                //* [...] и [...]
+                if (Array.isArray(stack[stack.length - 2]) && Array.isArray(stack[stack.length - 1])) {
+
+                    switch (currentToken) {
+                        case '*':
+                            const calc1 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = String(Number.parseInt(stack[stack.length - 2][j]) * Number.parseInt(stack[stack.length - 1][k]));
+                                    calc1.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc1);
+                            break;
+
+                        case '+':
+                            const calc2 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = String(Number.parseInt(stack[stack.length - 2][j]) + Number.parseInt(stack[stack.length - 1][k]));
+                                    calc2.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc2);
+                            break;
+
+                        case '-':
+                            const calc3 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = String(Number.parseInt(stack[stack.length - 2][j]) - Number.parseInt(stack[stack.length - 1][k]));
+                                    calc3.push(res);
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc3);
+                            break;
+
+                        case '>':
+                            const calc4 = [];
+
+                            for (let j = 0; j < stack[stack.length - 2].length; j++) {
+
+                                for (let k = 0; k < stack[stack.length - 1].length; k++) {
+
+                                    const res = Number.parseInt(stack[stack.length - 2][j]) > Number.parseInt(stack[stack.length - 1][k]);
+                                    
+                                    if (res) {
+                                        calc4.push('1');
+                                    } else calc4.push('0');
+                                }
+                            }
+
+                            stack.pop(stack[stack.length - 1]);
+                            stack.pop(stack[stack.length - 2]);
+                            stack.push(calc4);
+                            break;
+                    }
                 }
             }
         }
+
     }
 
-    resEasy = stack[stack.length - 1];
+    result = stack[stack.length - 1];
 
-    console.log('Результат', resEasy.sort((a,b) => a-b));//! 000000000000000000000000
-    console.log(stack); //! 000000000000000000000000
+    if (Array.isArray(result)) {
+        return result.sort((a,b) => a-b);
+    } else return result;
 }
-
 
 function createRPN (calcArr) {
 

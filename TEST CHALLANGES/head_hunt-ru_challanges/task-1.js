@@ -1,5 +1,3 @@
-//* Задача 1. Премия
-
 const readline = require('readline').createInterface(process.stdin, process.stdout);
 
 let lineNum = 0;

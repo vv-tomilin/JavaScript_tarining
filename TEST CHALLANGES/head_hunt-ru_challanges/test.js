@@ -11,7 +11,7 @@ const a = 1;
 
 let arrT1 = [];
 let arrT2 = [];
-let arrTres = [];
+let arrTRes = [];
 arrCreated()
 
 function arrCreated() {
@@ -21,22 +21,29 @@ function arrCreated() {
         arrT1.push(i+1);
     }
 
-    for (let j = 0; j < 10000; j++) {
+    for (let j = 0; j < 1000000; j++) {
         arrT2.push(j+1);
     }
 
     console.log('Начало конечного цикла');
 
-    for (let k = 0; k < arrT1.length; k++) {
+    let buffer = [];
+    let current = 0;
 
+    for (let k = 0; k < arrT1.length; k++) {
+        
         for (let n = 0; n < arrT2.length; n++) {
-            arrTres.push(arrT1[k] + arrT2[n]);
+            buffer.push(arrT1[k] + arrT2[n]);
+
+            if (n - 1 === 9999 || k === arrT1.length - 1) {
+                buffer.sort((a,b) => a-b);
+                arrTRes.push(buffer);
+                buffer = [];
+            }
         }
     }
     
     console.timeEnd('arrCr');
 
-    console.log(arrTres);
-
-    console.log(endTime - startTime);
+    console.log(arrTRes);
 }

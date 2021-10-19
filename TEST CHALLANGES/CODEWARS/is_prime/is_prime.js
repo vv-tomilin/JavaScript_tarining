@@ -1,6 +1,6 @@
 'use strict';
 
-console.log(isPrime(73));
+console.log(isPrimeV2(11));
 
 //! Использован метод перебора делителей
 
@@ -51,7 +51,7 @@ function isPrime(n) {
 //? ВОПРОС: Why have most of the top solutions used the square root of num as the limit? Being unable to decide on a limit made me forfeit.I appreciate the help!
 //? ОТВЕТ: because if number isn't didived by prime numbers or all numbers that less than or equal to its square root is a prime
 
-function isPrime(num) {
+function isPrimeV2(num) {
     if (num < 2) return false;
     const limit = Math.sqrt(num);
 

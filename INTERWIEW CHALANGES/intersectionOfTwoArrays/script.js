@@ -29,3 +29,10 @@ function intersection(nums1, nums2) {
 
 console.log(intersection(input1, input2));
 console.log(intersection(input3, input4));
+
+const result = document.getElementById("result")
+function showResult(e) {
+  result.innerHTML = e.target.value
+}
+const nameInput = document.getElementById("name")
+nameInput.oninput = showResult;
